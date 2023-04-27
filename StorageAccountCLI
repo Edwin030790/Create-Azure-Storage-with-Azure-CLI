@@ -1,0 +1,47 @@
+#Opens prompt to log in to Azure
+az login
+
+#Sets subscription based on Subscription ID
+az account set --subscription "Insert Subscription ID here"
+
+
+#Variables
+storageAccountName=InserStorageAccountName \
+resourceGroupName=InsertResourceGroupName \
+locationName=centralus \
+AZR_vNet=[insert vnet name] \
+VDI_subNet=/subscriptions/[InsertSubscriptionID/resourceGroups/ResourceGroupName/providers/Microsoft.Network/virtualNetworks/[VirtualNetworkName]/subnets/[SubnetName] \
+
+#Creates Storage Account
+az storage account create \
+ --name $storageAccountName \
+ --resource-group $resourceGroupName \
+ --location $locationName \
+ --public-network-access Enabled\
+ --default-action Deny
+ --sku Standard_LRS \
+ --min-tls-version TLS1_2 \
+
+#Adds subnet to Virtual Networks list
+ az storage account network-rule add \
+ --resource-group $resourceGroupName \
+ --account-name $storageAccountName \
+ --subnet $AZR_subNet \
+
+
+
+ 
+#Creates container1
+ az storage container create \
+ --account-name $storageAccountName \
+ --name container1 \
+ --auth-mode login \
+ --public-access off
+
+#Creates container2
+az storage container create \
+--account-name $storageAccountName \
+--name container2 \
+--auth-mode login \
+--public-access off
+
